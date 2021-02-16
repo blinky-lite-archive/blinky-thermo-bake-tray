@@ -1,0 +1,267 @@
+{
+  "deviceType": "blinky-ssr-bake",
+  "name": "01",
+  "arcPeriod": 60000,
+  "timeStamp": 1610962831200,
+  "lastArchive": 1610962777220,
+  "linkQuality": {
+    "action": "reading",
+    "type": "scalar",
+    "value": 60,
+    "unit": "/70",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 30,
+        "low": 40,
+        "high": 71,
+        "hihi": 80
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "signalLevel": {
+    "action": "reading",
+    "type": "scalar",
+    "value": -50,
+    "unit": "dBm",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": -70,
+        "low": -60,
+        "high": 0,
+        "hihi": 30
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "reset": {
+    "action": "setting",
+    "type": "scalar",
+    "value": 0,
+    "unit": "unit",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": -1,
+        "low": -1,
+        "high": 2,
+        "hihi": 2
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "dutyFactor": {
+    "action": "reading",
+    "type": "scalar",
+    "value": 29.8,
+    "unit": "%",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": -1,
+        "low": -0.5,
+        "high": 70,
+        "hihi": 75
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "rampTemp": {
+    "action": "reading",
+    "type": "scalar",
+    "value": 20,
+    "unit": "C",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": -200,
+        "low": -101,
+        "high": 120,
+        "hihi": 150
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "temperature": {
+    "action": "reading",
+    "type": "scalar",
+    "value": 75.25,
+    "unit": "C",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 10,
+        "low": 15,
+        "high": 205,
+        "hihi": 220
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "rampUpTime": {
+    "action": "setting",
+    "type": "scalar",
+    "value": 0.5,
+    "unit": "hours",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 0.0001,
+        "low": 0.2,
+        "high": 50,
+        "hihi": 100
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "regTemp": {
+    "action": "setting",
+    "type": "scalar",
+    "value": 25,
+    "unit": "C",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 15,
+        "low": 19,
+        "high": 205,
+        "hihi": 225
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "regState": {
+    "action": "setting",
+    "type": "scalar",
+    "value": 0,
+    "unit": "unit",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": -1,
+        "low": -0.5,
+        "high": 10,
+        "hihi": 11
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "num50HzCycles": {
+    "action": "setting",
+    "type": "scalar",
+    "value": 100,
+    "unit": "unit",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 2,
+        "low": 3,
+        "high": 1000,
+        "hihi": 1001
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "propK": {
+    "action": "setting",
+    "type": "scalar",
+    "value": 5,
+    "unit": "%/C",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 0,
+        "low": 0,
+        "high": 10,
+        "hihi": 11
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "intK": {
+    "action": "setting",
+    "type": "scalar",
+    "value": 3,
+    "unit": "%/min-C",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 1,
+        "low": 1,
+        "high": 10000,
+        "hihi": 10001
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  },
+  "avgDutyFactor": {
+    "action": "reading",
+    "type": "scalar",
+    "value": 31.1,
+    "unit": "%",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": -10,
+        "low": -10,
+        "high": 70,
+        "hihi": 75
+      },
+      "notify": {
+        "name": "",
+        "number": "",
+        "time": 0
+      }
+    }
+  }
+}
