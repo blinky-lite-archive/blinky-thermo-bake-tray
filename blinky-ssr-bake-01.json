@@ -2,12 +2,12 @@
   "deviceType": "blinky-ssr-bake",
   "name": "01",
   "arcPeriod": 60000,
-  "timeStamp": 1610962831200,
-  "lastArchive": 1610962777220,
+  "timeStamp": 1614249356391,
+  "lastArchive": 1614249302465,
   "linkQuality": {
     "action": "reading",
     "type": "scalar",
-    "value": 53,
+    "value": 66,
     "unit": "/70",
     "alarm": {
       "value": 0,
@@ -27,7 +27,7 @@
   "signalLevel": {
     "action": "reading",
     "type": "scalar",
-    "value": -57,
+    "value": -44,
     "unit": "dBm",
     "alarm": {
       "value": 0,
@@ -67,7 +67,7 @@
   "dutyFactor": {
     "action": "reading",
     "type": "scalar",
-    "value": 0,
+    "value": 3.1,
     "unit": "%",
     "alarm": {
       "value": 0,
@@ -87,7 +87,7 @@
   "rampTemp": {
     "action": "reading",
     "type": "scalar",
-    "value": 26,
+    "value": 27.19,
     "unit": "C",
     "alarm": {
       "value": 0,
@@ -104,18 +104,18 @@
       }
     }
   },
-  "temperature": {
+  "rampError": {
     "action": "reading",
     "type": "scalar",
-    "value": 26,
+    "value": -0.82,
     "unit": "C",
     "alarm": {
       "value": 0,
       "limits": {
-        "lolo": 10,
-        "low": 15,
-        "high": 205,
-        "hihi": 220
+        "lolo": -10,
+        "low": -5,
+        "high": 5,
+        "hihi": 10
       },
       "notify": {
         "name": "",
@@ -124,10 +124,30 @@
       }
     }
   },
+  "temperature": {
+    "action": "reading",
+    "type": "scalar",
+    "value": 26.41,
+    "unit": "C",
+    "alarm": {
+      "value": 0,
+      "limits": {
+        "lolo": 10,
+        "low": 15,
+        "high": 160,
+        "hihi": 170
+      },
+      "notify": {
+        "name": "McGinnis",
+        "number": "46725722472",
+        "time": 0
+      }
+    }
+  },
   "rampUpTime": {
     "action": "setting",
     "type": "scalar",
-    "value": 1,
+    "value": 0.5,
     "unit": "hours",
     "alarm": {
       "value": 0,
@@ -147,7 +167,7 @@
   "regTemp": {
     "action": "setting",
     "type": "scalar",
-    "value": 100,
+    "value": 50,
     "unit": "C",
     "alarm": {
       "value": 0,
@@ -227,13 +247,13 @@
   "intK": {
     "action": "setting",
     "type": "scalar",
-    "value": 2,
+    "value": 1,
     "unit": "%/min-C",
     "alarm": {
       "value": 0,
       "limits": {
-        "lolo": 1,
-        "low": 1,
+        "lolo": 0,
+        "low": 0,
         "high": 10000,
         "hihi": 10001
       },
@@ -247,7 +267,7 @@
   "avgDutyFactor": {
     "action": "reading",
     "type": "scalar",
-    "value": 0,
+    "value": 1.6,
     "unit": "%",
     "alarm": {
       "value": 0,
@@ -267,7 +287,7 @@
   "dutyFactorSet": {
     "action": "setting",
     "type": "scalar",
-    "value": 20,
+    "value": 10,
     "unit": "%",
     "alarm": {
       "value": 0,
@@ -287,7 +307,7 @@
   "numTempSamples": {
     "action": "setting",
     "type": "scalar",
-    "value": 3,
+    "value": 4,
     "unit": "units",
     "alarm": {
       "value": 0,
