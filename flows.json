@@ -226,12 +226,12 @@
         "id": "21ff842d.62f36c",
         "type": "serial-port",
         "serialport": "/dev/rfcomm0",
-        "serialbaud": "115200",
+        "serialbaud": "57600",
         "databits": "8",
         "parity": "none",
         "stopbits": "1",
         "waitfor": "",
-        "newline": "28",
+        "newline": "64",
         "bin": "bin",
         "out": "count",
         "addchar": "",
@@ -274,7 +274,7 @@
         "id": "29c7c408.706ffc",
         "type": "serial-port",
         "serialport": "/dev/rfcomm1",
-        "serialbaud": "115200",
+        "serialbaud": "57600",
         "databits": "8",
         "parity": "none",
         "stopbits": "1",
@@ -283,7 +283,7 @@
         "rts": "none",
         "cts": "none",
         "dsr": "none",
-        "newline": "24",
+        "newline": "64",
         "bin": "bin",
         "out": "count",
         "addchar": "",
@@ -339,24 +339,6 @@
         "wires": []
     },
     {
-        "id": "f3f3f15.081c31",
-        "type": "function",
-        "z": "5f562f66.a301e",
-        "name": "CreateSettings",
-        "func": "var device = flow.get('device');\n//node.warn('newSetting = ' + flow.get('newSetting').toString())\nvar checkSum = 20;\nvar bufsize = 8;\nvar buffer = new ArrayBuffer(bufsize);\nvar settingsView = new DataView(buffer);\nsettingsView.setInt32(0, flow.get('newSetting'), true);\nsettingsView.setInt32(4, checkSum, true);\n\nreturn {topic:'settings',payload:Buffer.from(buffer)};\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 540,
-        "y": 460,
-        "wires": [
-            [
-                "3f988ea4.7ee392"
-            ]
-        ]
-    },
-    {
         "id": "30f384ea.cf21fc",
         "type": "function",
         "z": "5f562f66.a301e",
@@ -371,25 +353,6 @@
         "wires": [
             [
                 "89892a30.598e28"
-            ]
-        ]
-    },
-    {
-        "id": "d5761f6c.c46e6",
-        "type": "function",
-        "z": "5f562f66.a301e",
-        "name": "Read Serial Handshake",
-        "func": "if (flow.get('device') == undefined) return null;\nif (flow.get('newSetting') == undefined) return null;\nvar ib;\nvar device = flow.get('device');\nvar dataView     = new DataView(new ArrayBuffer(4));\nvar newSettingDone = 0;\nvar cubeInit = 0;\n\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[0 * 4 + 3 - ib]);\ncubeInit = dataView.getInt32(0);\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[1 * 4 + 3 - ib]);\nnewSettingDone = dataView.getInt32(0);\n\nvar newMsg = {topic:'userData', payload:[]};\nfor (var ii = 8; ii < msg.payload.length; ++ii) newMsg.payload[ii - 8] = msg.payload[ii];\n\nif (newSettingDone > 0) \n{\n    flow.set('newSetting', 0);\n}\nif(cubeInit == 1) \n{\n    flow.set('newSetting', 1);\n}\n\nreturn newMsg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 290,
-        "y": 400,
-        "wires": [
-            [
-                "d6a8ff2a.f4acd",
-                "f3f3f15.081c31"
             ]
         ]
     },
@@ -426,24 +389,6 @@
         "wires": [
             [
                 "1cdcbcd8.9514e3"
-            ]
-        ]
-    },
-    {
-        "id": "d6a8ff2a.f4acd",
-        "type": "function",
-        "z": "5f562f66.a301e",
-        "name": "Create Readings",
-        "func": "var ib;\nvar device = flow.get('device');\nvar dataView     = new DataView(new ArrayBuffer(4));\n\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[0 * 4 + 3 - ib]);\ndevice.mAX31855_A.value = Math.round(dataView.getFloat32(0) * 100) / 100;\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[1 * 4 + 3 - ib]);\ndevice.mAX31855_B.value = Math.round(dataView.getFloat32(0) * 100) / 100;\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[2 * 4 + 3 - ib]);\ndevice.dS18B20_A.value = Math.round(dataView.getFloat32(0) * 100) / 100;\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[3 * 4 + 3 - ib]);\ndevice.dS18B20_B.value = Math.round(dataView.getFloat32(0) * 100) / 100;\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[4 * 4 + 3 - ib]);\nvar checkSum = dataView.getInt32(0);\nif (checkSum != 20)\n{\n    node.warn(\"checkSum = \" + checkSum.toString());\n}\n\nvar newSettingDoneMsg = {topic:'newSettingDone', payload:true} \n\nreturn newSettingDoneMsg;\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 550,
-        "y": 400,
-        "wires": [
-            [
-                "9115ea87.0ca208"
             ]
         ]
     },
@@ -642,7 +587,7 @@
         "type": "function",
         "z": "5f562f66.a301e",
         "name": "Init flow Variables",
-        "func": "var mqttSplit = msg.payload.split('/');\nvar deviceProps = {\n    project     :   mqttSplit[0],\n    deviceType  :   mqttSplit[1],\n    name        :   mqttSplit[2],\n    configFile  :   mqttSplit[1] + '-' + mqttSplit[2] + '.json'\n};\nflow.set('deviceProps',deviceProps);\nflow.set('newSetting',0);\nreturn {topic: 'readFile', 'filename':deviceProps.configFile};",
+        "func": "var mqttSplit = msg.payload.split('/');\nvar deviceProps = {\n    project     :   mqttSplit[0],\n    deviceType  :   mqttSplit[1],\n    name        :   mqttSplit[2],\n    configFile  :   mqttSplit[1] + '-' + mqttSplit[2] + '.json'\n};\nflow.set('deviceProps',deviceProps);\nflow.set('newSetting',0);\nflow.set('bluetoothCheckSum',64);\nreturn {topic: 'readFile', 'filename':deviceProps.configFile};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2319,24 +2264,6 @@
         ]
     },
     {
-        "id": "bf271599.6a8eb8",
-        "type": "function",
-        "z": "4729f242.5944cc",
-        "name": "CreateSettings",
-        "func": "var device = flow.get('device');\n//node.warn('newSetting = ' + flow.get('newSetting').toString())\nvar checkSum = 36;\nvar bufsize = 36;\nvar buffer = new ArrayBuffer(bufsize);\nvar settingsView = new DataView(buffer);\nsettingsView.setInt32(0, flow.get('newSetting'), true);\nsettingsView.setInt32(4, device.regState.value, true);\nsettingsView.setFloat32(8, device.num50HzCycles.value, true);\nsettingsView.setFloat32(12, device.rampTemp.value, true);\nsettingsView.setFloat32(16, device.propK.value, true);\nsettingsView.setFloat32(20, device.intK.value, true);\nsettingsView.setFloat32(24, device.dutyFactorSet.value, true);\nsettingsView.setFloat32(28, device.numTempSamples.value, true);\nsettingsView.setInt32(32, checkSum, true);\n\nreturn {topic:'settings',payload:Buffer.from(buffer)};\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 540,
-        "y": 460,
-        "wires": [
-            [
-                "b1d422ae.6458c"
-            ]
-        ]
-    },
-    {
         "id": "6020856f.0a3a8c",
         "type": "function",
         "z": "4729f242.5944cc",
@@ -2351,25 +2278,6 @@
         "wires": [
             [
                 "ee2047ec.0176f8"
-            ]
-        ]
-    },
-    {
-        "id": "191f838d.17da3c",
-        "type": "function",
-        "z": "4729f242.5944cc",
-        "name": "Read Serial Handshake",
-        "func": "if (flow.get('device') == undefined) return null;\nif (flow.get('newSetting') == undefined) return null;\nvar ib;\nvar device = flow.get('device');\nvar dataView     = new DataView(new ArrayBuffer(4));\nvar newSettingDone = 0;\nvar cubeInit = 0;\n\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[0 * 4 + 3 - ib]);\ncubeInit = dataView.getInt32(0);\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[1 * 4 + 3 - ib]);\nnewSettingDone = dataView.getInt32(0);\n\nvar newMsg = {topic:'userData', payload:[]};\nfor (var ii = 8; ii < msg.payload.length; ++ii) newMsg.payload[ii - 8] = msg.payload[ii];\n\nif (newSettingDone > 0) \n{\n    flow.set('newSetting', 0);\n}\nif(cubeInit == 1) \n{\n    flow.set('newSetting', 1);\n}\n\nreturn newMsg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 290,
-        "y": 400,
-        "wires": [
-            [
-                "292daf23.43fa2",
-                "bf271599.6a8eb8"
             ]
         ]
     },
@@ -2406,24 +2314,6 @@
         "wires": [
             [
                 "c32459df.7b0e18"
-            ]
-        ]
-    },
-    {
-        "id": "292daf23.43fa2",
-        "type": "function",
-        "z": "4729f242.5944cc",
-        "name": "Create Readings",
-        "func": "var ib;\nvar device = flow.get('device');\nvar dataView     = new DataView(new ArrayBuffer(4));\n\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[0 * 4 + 3 - ib]);\ndevice.temperature.value = Math.round(dataView.getFloat32(0) * 100) / 100;\n\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[1 * 4 + 3 - ib]);\ndevice.dutyFactor.value = Math.round(dataView.getFloat32(0) * 1000) / 10;\n\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[2 * 4 + 3 - ib]);\ndevice.avgDutyFactor.value = Math.round(dataView.getFloat32(0) * 1000) / 10;\n\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[3 * 4 + 3 - ib]);\nvar checkSum = dataView.getInt32(0);\nif (checkSum != 36)\n{\n    node.warn(\"checkSum = \" + checkSum.toString());\n}\nvar newSettingDoneMsg = {topic:'newSettingDone', payload:true} \n\nreturn newSettingDoneMsg;\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "x": 550,
-        "y": 400,
-        "wires": [
-            [
-                "badc0588.0ba3e8"
             ]
         ]
     },
@@ -2495,7 +2385,7 @@
         "type": "function",
         "z": "4729f242.5944cc",
         "name": "Init flow Variables",
-        "func": "var mqttSplit = msg.payload.split('/');\nvar deviceProps = {\n    project     :   mqttSplit[0],\n    deviceType  :   mqttSplit[1],\n    name        :   mqttSplit[2],\n    configFile  :   mqttSplit[1] + '-' + mqttSplit[2] + '.json'\n};\nflow.set('deviceProps',deviceProps);\nflow.set('newSetting',0);\nreturn {topic: 'readFile', 'filename':deviceProps.configFile};",
+        "func": "var mqttSplit = msg.payload.split('/');\nvar deviceProps = {\n    project     :   mqttSplit[0],\n    deviceType  :   mqttSplit[1],\n    name        :   mqttSplit[2],\n    configFile  :   mqttSplit[1] + '-' + mqttSplit[2] + '.json'\n};\nflow.set('deviceProps',deviceProps);\nflow.set('newSetting',0);\nflow.set('bluetoothCheckSum',64);\nreturn {topic: 'readFile', 'filename':deviceProps.configFile};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -3422,7 +3312,7 @@
         "y": 400,
         "wires": [
             [
-                "191f838d.17da3c"
+                "8e925e41.e18b2"
             ]
         ]
     },
@@ -3875,5 +3765,119 @@
         "x": 1150,
         "y": 1520,
         "wires": []
+    },
+    {
+        "id": "f3f3f15.081c31",
+        "type": "function",
+        "z": "5f562f66.a301e",
+        "name": "CreateSettings",
+        "func": "var device = flow.get('device');\n//node.warn('newSetting = ' + flow.get('newSetting').toString())\nvar bufsize = 64;\nvar buffer = new ArrayBuffer(bufsize);\nvar settingsView = new DataView(buffer);\nsettingsView.setInt32(0, flow.get('newSetting'), true);\nsettingsView.setInt32(4, flow.get('bluetoothCheckSum'), true);\nfor (var ii = 8; ii < bufsize; ++ii) settingsView.setUint8(ii, 0, true);\n\nflow.set('bluetoothCheckSum',64);\n\nreturn {topic:'settings',payload:Buffer.from(buffer)};\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 540,
+        "y": 460,
+        "wires": [
+            [
+                "3f988ea4.7ee392"
+            ]
+        ]
+    },
+    {
+        "id": "d5761f6c.c46e6",
+        "type": "function",
+        "z": "5f562f66.a301e",
+        "name": "Read Serial Handshake",
+        "func": "if (flow.get('device') == undefined) return null;\nif (flow.get('newSetting') == undefined) return null;\nvar ib;\nvar device = flow.get('device');\nvar dataView     = new DataView(new ArrayBuffer(4));\nvar newSettingDone = 0;\nvar cubeInit = 0;\nvar checkSum = 0;\n\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[0 * 4 + 3 - ib]);\ncubeInit = dataView.getInt32(0);\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[1 * 4 + 3 - ib]);\nnewSettingDone = dataView.getInt32(0);\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[2 * 4 + 3 - ib]);\ncheckSum = dataView.getInt32(0);\nif (checkSum != msg.payload.length)\n{\n    node.warn(\"checkSum = \" + checkSum.toString());\n    flow.set('bluetoothCheckSum',0);\n    return [null,{topic:'restartBluetooth',payload:true}];\n}\n\nvar newMsg = {topic:'userData', payload:[]};\nfor (var ii = 12; ii < msg.payload.length; ++ii) newMsg.payload[ii - 12] = msg.payload[ii];\n\nif (newSettingDone > 0) \n{\n    flow.set('newSetting', 0);\n}\nif(cubeInit == 1) \n{\n    flow.set('newSetting', 1);\n}\n\nreturn [newMsg,{topic:'restartBluetooth',payload:false}];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 290,
+        "y": 400,
+        "wires": [
+            [
+                "d6a8ff2a.f4acd"
+            ],
+            [
+                "f3f3f15.081c31"
+            ]
+        ]
+    },
+    {
+        "id": "d6a8ff2a.f4acd",
+        "type": "function",
+        "z": "5f562f66.a301e",
+        "name": "Create Readings",
+        "func": "var ib;\nvar device = flow.get('device');\nvar dataView     = new DataView(new ArrayBuffer(4));\n\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[0 * 4 + 3 - ib]);\ndevice.mAX31855_A.value = Math.round(dataView.getFloat32(0) * 100) / 100;\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[1 * 4 + 3 - ib]);\ndevice.mAX31855_B.value = Math.round(dataView.getFloat32(0) * 100) / 100;\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[2 * 4 + 3 - ib]);\ndevice.dS18B20_A.value = Math.round(dataView.getFloat32(0) * 100) / 100;\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[3 * 4 + 3 - ib]);\ndevice.dS18B20_B.value = Math.round(dataView.getFloat32(0) * 100) / 100;\n\nvar newSettingDoneMsg = {topic:'newSettingDone', payload:true} \n\nreturn newSettingDoneMsg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 550,
+        "y": 400,
+        "wires": [
+            [
+                "9115ea87.0ca208"
+            ]
+        ]
+    },
+    {
+        "id": "4b54dd31.462844",
+        "type": "function",
+        "z": "4729f242.5944cc",
+        "name": "CreateSettings",
+        "func": "var device = flow.get('device');\n//node.warn('newSetting = ' + flow.get('newSetting').toString())\nvar bufsize = 64;\nvar buffer = new ArrayBuffer(bufsize);\nvar settingsView = new DataView(buffer);\nsettingsView.setInt32(0, flow.get('newSetting'), true);\nsettingsView.setInt32(4, flow.get('bluetoothCheckSum'), true);\nsettingsView.setInt32(8, device.regState.value, true);\nsettingsView.setFloat32(12, device.num50HzCycles.value, true);\nsettingsView.setFloat32(16, device.rampTemp.value, true);\nsettingsView.setFloat32(20, device.propK.value, true);\nsettingsView.setFloat32(24, device.intK.value, true);\nsettingsView.setFloat32(28, device.dutyFactorSet.value, true);\nsettingsView.setFloat32(32, device.numTempSamples.value, true);\nfor (var ii = 36; ii < bufsize; ++ii) settingsView.setUint8(ii, 0, true);\n\nflow.set('bluetoothCheckSum',64);\n\nreturn {topic:'settings',payload:Buffer.from(buffer)};\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 540,
+        "y": 460,
+        "wires": [
+            [
+                "b1d422ae.6458c"
+            ]
+        ]
+    },
+    {
+        "id": "8e925e41.e18b2",
+        "type": "function",
+        "z": "4729f242.5944cc",
+        "name": "Read Serial Handshake",
+        "func": "if (flow.get('device') == undefined) return null;\nif (flow.get('newSetting') == undefined) return null;\nvar ib;\nvar device = flow.get('device');\nvar dataView     = new DataView(new ArrayBuffer(4));\nvar newSettingDone = 0;\nvar cubeInit = 0;\nvar checkSum = 0;\n\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[0 * 4 + 3 - ib]);\ncubeInit = dataView.getInt32(0);\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[1 * 4 + 3 - ib]);\nnewSettingDone = dataView.getInt32(0);\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[2 * 4 + 3 - ib]);\ncheckSum = dataView.getInt32(0);\nif (checkSum != msg.payload.length)\n{\n    node.warn(\"checkSum = \" + checkSum.toString());\n    flow.set('bluetoothCheckSum',0);\n    return [null,{topic:'restartBluetooth',payload:true}];\n}\n\nvar newMsg = {topic:'userData', payload:[]};\nfor (var ii = 12; ii < msg.payload.length; ++ii) newMsg.payload[ii - 12] = msg.payload[ii];\n\nif (newSettingDone > 0) \n{\n    flow.set('newSetting', 0);\n}\nif(cubeInit == 1) \n{\n    flow.set('newSetting', 1);\n}\n\nreturn [newMsg,{topic:'restartBluetooth',payload:false}];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 290,
+        "y": 400,
+        "wires": [
+            [
+                "c98b331e.e30fe"
+            ],
+            [
+                "4b54dd31.462844"
+            ]
+        ]
+    },
+    {
+        "id": "c98b331e.e30fe",
+        "type": "function",
+        "z": "4729f242.5944cc",
+        "name": "Create Readings",
+        "func": "var ib;\nvar device = flow.get('device');\nvar dataView     = new DataView(new ArrayBuffer(4));\n\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[0 * 4 + 3 - ib]);\ndevice.temperature.value = Math.round(dataView.getFloat32(0) * 100) / 100;\n\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[1 * 4 + 3 - ib]);\ndevice.dutyFactor.value = Math.round(dataView.getFloat32(0) * 1000) / 10;\n\nfor (ib = 0; ib < 4; ++ib)   dataView.setUint8(ib, msg.payload[2 * 4 + 3 - ib]);\ndevice.avgDutyFactor.value = Math.round(dataView.getFloat32(0) * 1000) / 10;\n\nvar newSettingDoneMsg = {topic:'newSettingDone', payload:true} \n\nreturn newSettingDoneMsg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 550,
+        "y": 400,
+        "wires": [
+            [
+                "badc0588.0ba3e8"
+            ]
+        ]
     }
 ]
